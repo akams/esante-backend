@@ -9,13 +9,13 @@ exports.connect = function(url, done) {
 
   MongoClient.connect(url, function(err, db) {
     if (err) return done(err)
-    state.db = db
+    state.db = db.db("esante")
     done()
   })
 }
 
 exports.get = function() {
-  return state.db
+  return state.db;
 }
 
 exports.close = function(done) {

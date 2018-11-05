@@ -1,7 +1,7 @@
 // Imports
 var bcrypt    = require('bcrypt');
 var jwtUtils  = require('../utils/jwt.utils');
-var Users     = require('../models/users');
+var UserModel     = require('../models/users');
 var asyncLib  = require('async');
 
 // Constants
@@ -17,9 +17,6 @@ module.exports = {
     var username = req.body.username;
     var password = req.body.password;
     var bio      = req.body.bio;
-
-    console.log('req.body');
-    console.log(req.body);
 
     if (email == null || username == null || password == null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -39,10 +36,7 @@ module.exports = {
 
     asyncLib.waterfall([
       function(done) {
-        models.User.findOne({
-          attributes: ['email'],
-          where: { email: email }
-        })
+        UserModel.find({ email: email })
         .then(function(userFound) {
           done(null, userFound);
         })
@@ -60,7 +54,7 @@ module.exports = {
         }
       },
       function(userFound, bcryptedPassword, done) {
-        var newUser = models.User.create({
+        UserModel.insert({
           email: email,
           username: username,
           password: bcryptedPassword,
@@ -76,8 +70,8 @@ module.exports = {
       }
     ], function(newUser) {
       if (newUser) {
-        return res.status(201).json({
-          'userId': newUser.id
+        return res.json({
+          'userId': newUser.insertedId
         });
       } else {
         return res.status(500).json({ 'error': 'cannot add user' });
@@ -85,7 +79,6 @@ module.exports = {
     });
   },
   login: function(req, res, next) {
-    
     // Params
     var email    = req.body.email;
     var password = req.body.password;
@@ -96,9 +89,7 @@ module.exports = {
 
     asyncLib.waterfall([
       function(done) {
-        models.User.findOne({
-          where: { email: email }
-        })
+        UserModel.find({ email: email })
         .then(function(userFound) {
           done(null, userFound);
         })
@@ -125,7 +116,7 @@ module.exports = {
     ], function(userFound) {
       if (userFound) {
         return res.status(201).json({
-          'userId': userFound.id,
+          'userId': userFound._id,
           'token': jwtUtils.generateTokenForUser(userFound)
         });
       } else {
