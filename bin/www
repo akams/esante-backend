@@ -9,11 +9,13 @@ var mongodb = require('../database/mongodb');
 var debug = require('debug')('esante-backend:server');
 var http = require('http');
 
+const constant = require('../config/constant');
+
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
@@ -22,12 +24,14 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+const ENV = constant.ENV;
+
 /**
  * Listen on provided port, on all network interfaces.
  */
 
  // Connect to Mongo on start
- mongodb.connect('mongodb://mongo:27017/esante', function(err) {
+ mongodb.connect(`mongodb://${ENV}:27017/`, function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.')
     process.exit(1)

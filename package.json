@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "DEV_ENV=localhost node ./bin/www",
+    "docker": "DEV_ENV=mongo node ./bin/www",
+    "build prod": "DEV_ENV=pro node ./bin/www"
   },
   "dependencies": {
     "async": "^2.6.1",

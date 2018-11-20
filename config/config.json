@@ -17,7 +17,7 @@
     "username": "root",
     "password": "<YOUR_PASSWORD>",
     "database": "database_production_retro",
-    "host": "127.0.0.1",
+    "host": "mongodb://mongo:27017/esante",
     "dialect": "mysql"
   }
 }
