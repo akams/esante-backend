@@ -1,4 +1,4 @@
-var db = require('../database/mongodb')
+var db = require('../database/mongodb');
 
 exports.all = function() {
   var collection = db.get().collection('users');

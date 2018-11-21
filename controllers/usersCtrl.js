@@ -1,8 +1,9 @@
 // Imports
 var bcrypt    = require('bcrypt');
-var jwtUtils  = require('../utils/jwt.utils');
-var UserModel     = require('../models/users');
 var asyncLib  = require('async');
+var jwtUtils  = require('../utils/jwt.utils');
+var UserModel = require('../models/users');
+var createId  = require('../database/mongodb').createIdMongo;
 
 // Constants
 const EMAIL_REGEX     = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -184,5 +185,18 @@ module.exports = {
         return res.status(500).json({ 'error': 'cannot update user profile' });
       }
     });
+  },
+  getUserCredentials: async function(req, res, next) {
+    const userId = req.userId;
+    return UserModel.find({ _id: createId(userId) })
+      .then(function(userFound) {
+        return res.status(201).json({
+          'token': jwtUtils.generateTokenForUser(userFound)
+        });
+      })
+      .catch(function(err) {
+        console.log({err});
+        return res.status(500).json({ 'error': 'unable to verify user' });
+      });
   }
 }

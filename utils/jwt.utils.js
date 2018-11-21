@@ -10,7 +10,7 @@ module.exports = {
       userId: userData._id,
       isAdmin: userData.isAdmin
     },
-    JWT_SIGN_SECRET,
+    process.env.JWT_SECRET || JWT_SIGN_SECRET,
     {
       expiresIn: '1h'
     })
@@ -23,7 +23,7 @@ module.exports = {
     var token = module.exports.parseAuthorization(authorization);
     if(token != null) {
       try {
-        var jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
+        var jwtToken = jwt.verify(token, process.env.JWT_SECRET || JWT_SIGN_SECRET);
         if(jwtToken != null)
           userId = jwtToken.userId;
       } catch(err) { }
