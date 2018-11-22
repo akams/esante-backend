@@ -198,5 +198,18 @@ module.exports = {
         console.log({err});
         return res.status(500).json({ 'error': 'unable to verify user' });
       });
+  },
+  logout: async function(req, res, next) {
+    const userId = req.userId;
+    return UserModel.find({ _id: createId(userId) })
+      .then(function(userFound) {
+        return res.status(201).json({
+          'token': jwtUtils.generateTokenForUser(userFound, {expiresIn: 1})
+        });
+      })
+      .catch(function(err) {
+        console.log({err});
+        return res.status(500).json({ 'error': 'unable to verify user' });
+      });
   }
 }

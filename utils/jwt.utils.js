@@ -5,15 +5,16 @@ const JWT_SIGN_SECRET = 'mon_secret_jwt';
 
 // Exported functions
 module.exports = {
-  generateTokenForUser: function(userData) {
+  generateTokenForUser: function(userData, option = {
+    expiresIn: '1h'
+  }) {
     return jwt.sign({
       userId: userData._id,
       isAdmin: userData.isAdmin
     },
     process.env.JWT_SECRET || JWT_SIGN_SECRET,
-    {
-      expiresIn: '1h'
-    })
+    option
+    )
   },
   parseAuthorization: function(authorization) {
     return (authorization != null) ? authorization.replace('Bearer ', '') : null;

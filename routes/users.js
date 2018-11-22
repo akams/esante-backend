@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 });
 router.post('/register/', usersCtrl.register);
 router.post('/login/', usersCtrl.login);
+router.get('/logout/', usersCtrl.logout);
 
 router.get('/me/from/token', usersCtrl.getUserCredentials);
 
